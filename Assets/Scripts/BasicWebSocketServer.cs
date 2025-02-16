@@ -64,6 +64,7 @@ public class ChatBehavior : WebSocketBehavior
         // Notificar a todos que el usuario se ha desconectado
         BroadcastMessage($"<color={userColors[userId]}><b>{userId}</b></color> se ha desconectado.");
         userColors.Remove(userId);
+        userCount--;
     }
 
     private void BroadcastMessage(string message)
