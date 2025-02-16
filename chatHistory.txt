@@ -11,3 +11,19 @@ Usuario 2: perfecto
 Usuario 2: ahi estare
 Usuario 2 se ha desconectado.
 Usuario 1: dale
+Usuario 1 se ha unido al chat.
+Usuario 1: asdad
+Usuario 1 se ha unido al chat.
+Usuario 2 se ha unido al chat.
+Usuario 1: hola
+Usuario 2: hola
+Usuario 1 se ha desconectado.
+Usuario 1 se ha unido al chat.
+Usuario 2 se ha unido al chat.
+Usuario 1: hola
+Usuario 2: hola
+Usuario 2 se ha desconectado.
+Usuario 2 se ha unido al chat.
+Usuario 1: hola
+Usuario 2: hola
+Usuario 2 se ha desconectado.
