@@ -2,6 +2,7 @@ using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using System.Collections.Generic;
+using System.IO;
 
 public class BasicWebSocketServer : MonoBehaviour
 {
@@ -33,6 +34,17 @@ public class ChatBehavior : WebSocketBehavior
     private static int colorIndex = 0;
     private static int userCount = 1; // Contador para los nombres de los usuarios
     private string userId;
+    private static string filePath = "chatHistory.txt"; // Ruta del archivo donde se guardará el historial
+
+    // Constructor estático para inicializar el archivo
+    static ChatBehavior()
+    {
+        // Si el archivo no existe, lo creamos. Si ya existe, lo dejamos intacto.
+        if (!File.Exists(filePath))
+        {
+            File.WriteAllText(filePath, "Historial de mensajes:\n\n");
+        }
+    }
 
     protected override void OnOpen()
     {
@@ -46,8 +58,11 @@ public class ChatBehavior : WebSocketBehavior
             colorIndex++;
         }
 
-        // Notificar a todos que un usuario se ha unido, usando el nombre legible
+        // Notificar a todos que un usuario se ha unido
         BroadcastMessage($"<color={userColors[userId]}><b>{userId}</b></color> se ha unido al chat.");
+
+        // Guardar el mensaje en el historial (sin etiquetas)
+        SaveMessage($"{userId} se ha unido al chat.");
     }
 
     protected override void OnMessage(MessageEventArgs e)
@@ -55,14 +70,23 @@ public class ChatBehavior : WebSocketBehavior
         if (!string.IsNullOrEmpty(e.Data))
         {
             // Mostrar el mensaje con el nombre del usuario y color
-            BroadcastMessage($"<color={userColors[userId]}><b>{userId}</b></color>: <color=#000000>{e.Data}</color>");
+            string message = $"<color={userColors[userId]}><b>{userId}</b></color>: <color=#000000>{e.Data}</color>";
+            BroadcastMessage(message);
+
+            // Guardar el mensaje en el historial (sin etiquetas)
+            SaveMessage($"{userId}: {e.Data}");
         }
     }
 
     protected override void OnClose(CloseEventArgs e)
     {
         // Notificar a todos que el usuario se ha desconectado
-        BroadcastMessage($"<color={userColors[userId]}><b>{userId}</b></color> se ha desconectado.");
+        string message = $"<color={userColors[userId]}><b>{userId}</b></color> se ha desconectado.";
+        BroadcastMessage(message);
+
+        // Guardar el mensaje en el historial (sin etiquetas)
+        SaveMessage($"{userId} se ha desconectado.");
+
         userColors.Remove(userId);
         userCount--;
     }
@@ -70,5 +94,21 @@ public class ChatBehavior : WebSocketBehavior
     private void BroadcastMessage(string message)
     {
         Sessions.Broadcast(message);
+    }
+
+    private void SaveMessage(string message)
+    {
+        // Guardar solo el usuario y el texto en el archivo de texto
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(filePath, true)) // "true" para añadir al archivo
+            {
+                writer.WriteLine(message);
+            }
+        }
+        catch (IOException ex)
+        {
+            Debug.LogError("Error al guardar el mensaje en el archivo: " + ex.Message);
+        }
     }
 }

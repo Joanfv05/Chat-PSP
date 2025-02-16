@@ -1414,10 +1414,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50a1b20c9639047feb7263f867ad80be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatDisplay: {fileID: 1289102679}
-  inputField: {fileID: 520664972}
-  sendButton: {fileID: 1106907106}
-  scrollRect: {fileID: 374804136}
 --- !u!4 &1377459009
 Transform:
   m_ObjectHideFlags: 0
